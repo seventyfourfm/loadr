@@ -1,9 +1,30 @@
+-- Warp System - Fixed Nil Error
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
+
+-- Terminate any existing instance
+if _G.WarpSystem then
+    pcall(function()
+        _G.WarpSystem:cleanup()
+    end)
+    _G.WarpSystem = nil
+end
+
+-- Check if GUI already exists and destroy it (with nil check)
+local playerGui = player:FindFirstChild("PlayerGui")
+if playerGui then
+    for _, gui in ipairs(playerGui:GetChildren()) do
+        if gui.Name == "TickWarpGui" then
+            pcall(function()
+                gui:Destroy()
+            end)
+        end
+    end
+end
 
 local Config = {
     Key = Enum.KeyCode.E,
@@ -13,7 +34,6 @@ local Config = {
     WarpStyle = "Smooth",
     Cooldown = 0.1,
     PreviewSize = Vector3.new(3, 5, 3),
-    FadeDuration = 0.3,
     MinTimePerTick = 0.05,
     MaxTicksLimit = 50,
     MaxDistancePerTick = 100,
@@ -55,25 +75,26 @@ local state = {
     character = nil,
     hrp = nil,
     isLoaded = true,
-    uiVisible = false,
     chargingLock = false,
-    previewUpdateConnection = nil
+    previewUpdateConnection = nil,
+    isRespawning = false,
+    isTerminating = false
 }
 
 local connections = {}
 local activeTweens = {}
 
-local screenGui, barBackground, barFill, tickLabel, corner1, corner2
+local screenGui, mainFrame, barBackground, barFill, tickLabel
 local previewPart, selectionBox
 local uiSetupDone = false
-local fadeTween = nil
 
 local function isCharacterValid(character)
     if not character then return false end
     if character:GetAttribute("Disabled") then return false end
     
     local humanoid = character:FindFirstChild("Humanoid")
-    if humanoid and humanoid.Health <= 0 then return false end
+    if not humanoid then return false end
+    if humanoid.Health <= 0 then return false end
     
     local hrp = character:FindFirstChild("HumanoidRootPart")
     if not hrp then return false end
@@ -98,6 +119,7 @@ local function updateCharacter(newChar)
     if newChar and isCharacterValid(newChar) then
         state.character = newChar
         state.hrp = newChar:FindFirstChild("HumanoidRootPart")
+        state.isRespawning = false
         return true
     end
     return false
@@ -149,55 +171,24 @@ local function updateRaycastFilter()
 end
 updateRaycastFilter()
 
-local function fadeInUI()
-    if not barBackground then return end
-    
-    if fadeTween then
-        fadeTween:Cancel()
-        fadeTween = nil
+-- Reset UI function - ensures GUI is properly reset
+local function resetUI()
+    if mainFrame then
+        mainFrame.Visible = true
+        mainFrame.BackgroundTransparency = 0
     end
-    
-    barBackground.Visible = true
-    barBackground.BackgroundTransparency = 1
-    barFill.BackgroundTransparency = 1
-    tickLabel.TextTransparency = 1
-    
-    local fadeInTweenInfo = TweenInfo.new(Config.FadeDuration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    
-    local tween1 = TweenService:Create(barBackground, fadeInTweenInfo, {BackgroundTransparency = 0})
-    local tween2 = TweenService:Create(barFill, fadeInTweenInfo, {BackgroundTransparency = 0})
-    local tween3 = TweenService:Create(tickLabel, fadeInTweenInfo, {TextTransparency = 0})
-    
-    tween1:Play()
-    tween2:Play()
-    tween3:Play()
-    
-    state.uiVisible = true
-end
-
-local function fadeOutUI()
-    if not barBackground or not state.uiVisible then return end
-    
-    if fadeTween then
-        fadeTween:Cancel()
-        fadeTween = nil
+    if barBackground then
+        barBackground.BackgroundTransparency = 0
     end
-    
-    local fadeOutTweenInfo = TweenInfo.new(Config.FadeDuration, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-    
-    local tween1 = TweenService:Create(barBackground, fadeOutTweenInfo, {BackgroundTransparency = 1})
-    local tween2 = TweenService:Create(barFill, fadeOutTweenInfo, {BackgroundTransparency = 1})
-    local tween3 = TweenService:Create(tickLabel, fadeOutTweenInfo, {TextTransparency = 1})
-    
-    tween1:Play()
-    tween2:Play()
-    tween3:Play()
-    
-    task.spawn(function()
-        task.wait(Config.FadeDuration)
-        barBackground.Visible = false
-        state.uiVisible = false
-    end)
+    if barFill then
+        barFill.BackgroundTransparency = 0
+        barFill.Size = UDim2.new(0, 0, 1, 0)
+    end
+    if tickLabel then
+        tickLabel.TextTransparency = 0
+        tickLabel.Text = "TICKS: 0 / " .. Config.MaxTicks
+        tickLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    end
 end
 
 local function setupUI()
@@ -212,43 +203,112 @@ local function setupUI()
     screenGui = Instance.new("ScreenGui")
     screenGui.Name = "TickWarpGui"
     screenGui.ResetOnSpawn = false
+    if syn and syn.protect_gui then syn.protect_gui(screenGui) end
     screenGui.Parent = playerGui
     
+    -- Main Frame
+    mainFrame = Instance.new("Frame")
+    mainFrame.Name = "MainFrame"
+    mainFrame.Size = UDim2.new(0, 250, 0, 80)
+    mainFrame.Position = UDim2.new(0.5, -125, 0.75, 0)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Visible = true
+    mainFrame.BackgroundTransparency = 0
+    mainFrame.Parent = screenGui
+    
+    local mainCorner = Instance.new("UICorner")
+    mainCorner.CornerRadius = UDim.new(0, 8)
+    mainCorner.Parent = mainFrame
+    
+    -- Title Bar
+    local titleBar = Instance.new("Frame")
+    titleBar.Size = UDim2.new(1, 0, 0, 30)
+    titleBar.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    titleBar.BorderSizePixel = 0
+    titleBar.Parent = mainFrame
+    
+    local titleCorner = Instance.new("UICorner")
+    titleCorner.CornerRadius = UDim.new(0, 8)
+    titleCorner.Parent = titleBar
+    
+    -- Title Label
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, 0, 1, 0)
+    titleLabel.Position = UDim2.new(0, 10, 0, 0)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Text = "Warp System"
+    titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    titleLabel.Font = Enum.Font.SourceSansBold
+    titleLabel.TextSize = 14
+    titleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    titleLabel.Parent = titleBar
+    
+    -- Keybind indicator
+    local keyLabel = Instance.new("TextLabel")
+    keyLabel.Size = UDim2.new(0, 60, 1, 0)
+    keyLabel.Position = UDim2.new(1, -70, 0, 0)
+    keyLabel.BackgroundTransparency = 1
+    keyLabel.Text = "[E]"
+    keyLabel.TextColor3 = Color3.fromRGB(0, 255, 150)
+    keyLabel.Font = Enum.Font.SourceSansBold
+    keyLabel.TextSize = 13
+    keyLabel.TextXAlignment = Enum.TextXAlignment.Right
+    keyLabel.Parent = titleBar
+    
+    -- Line
+    local line = Instance.new("Frame")
+    line.Size = UDim2.new(1, 0, 0, 2)
+    line.Position = UDim2.new(0, 0, 0, 30)
+    line.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
+    line.BorderSizePixel = 0
+    line.Parent = mainFrame
+    
+    -- Container
+    local container = Instance.new("Frame")
+    container.Size = UDim2.new(1, 0, 1, -35)
+    container.Position = UDim2.new(0, 0, 0, 35)
+    container.BackgroundTransparency = 1
+    container.Parent = mainFrame
+    
+    -- Bar Background
     barBackground = Instance.new("Frame")
-    barBackground.Size = UDim2.new(0, 250, 0, 20)
-    barBackground.Position = UDim2.new(0.5, -125, 0.75, 0)
-    barBackground.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    barBackground.Size = UDim2.new(0, 220, 0, 16)
+    barBackground.Position = UDim2.new(0.5, -110, 0.5, -8)
+    barBackground.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
     barBackground.BorderSizePixel = 0
-    barBackground.Visible = false
-    barBackground.BackgroundTransparency = 1
-    barBackground.Parent = screenGui
+    barBackground.BackgroundTransparency = 0
+    barBackground.Parent = container
     
-    corner1 = Instance.new("UICorner")
-    corner1.CornerRadius = UDim.new(0, 6)
-    corner1.Parent = barBackground
+    local barCorner = Instance.new("UICorner")
+    barCorner.CornerRadius = UDim.new(0, 4)
+    barCorner.Parent = barBackground
     
+    -- Bar Fill
     barFill = Instance.new("Frame")
     barFill.Size = UDim2.new(0, 0, 1, 0)
     barFill.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
     barFill.BorderSizePixel = 0
-    barFill.BackgroundTransparency = 1
+    barFill.BackgroundTransparency = 0
     barFill.Parent = barBackground
     
-    corner2 = Instance.new("UICorner")
-    corner2.CornerRadius = UDim.new(0, 6)
-    corner2.Parent = barFill
+    local fillCorner = Instance.new("UICorner")
+    fillCorner.CornerRadius = UDim.new(0, 4)
+    fillCorner.Parent = barFill
     
+    -- Tick Label
     tickLabel = Instance.new("TextLabel")
-    tickLabel.Size = UDim2.new(1, 0, 0, 20)
-    tickLabel.Position = UDim2.new(0, 0, -1.5, 0)
+    tickLabel.Size = UDim2.new(0, 220, 0, 20)
+    tickLabel.Position = UDim2.new(0.5, -110, 1, 4)
     tickLabel.BackgroundTransparency = 1
-    tickLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    tickLabel.TextSize = 16
-    tickLabel.Font = Enum.Font.Code
+    tickLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    tickLabel.TextSize = 12
+    tickLabel.Font = Enum.Font.SourceSans
     tickLabel.Text = "TICKS: 0 / " .. Config.MaxTicks
-    tickLabel.TextTransparency = 1
-    tickLabel.Parent = barBackground
+    tickLabel.TextTransparency = 0
+    tickLabel.Parent = container
     
+    -- Preview Part
     previewPart = Instance.new("Part")
     previewPart.Size = HIDDEN_SIZE
     previewPart.Transparency = 0.8
@@ -289,12 +349,12 @@ local function getWarpCFrame(ticksCharged)
 end
 
 local function cancelAllTweens()
-    for _, tween in ipairs(activeTweens) do
+    for i = #activeTweens, 1, -1 do
         pcall(function()
-            tween:Cancel()
+            activeTweens[i]:Cancel()
         end)
+        table.remove(activeTweens, i)
     end
-    table.clear(activeTweens)
 end
 
 local function executeWarp(ticksCharged)
@@ -332,7 +392,9 @@ local function updatePreview()
     if not state.hrp then return end
     
     local newCFrame = getWarpCFrame(state.ticks)
-    previewPart.CFrame = newCFrame
+    if previewPart then
+        previewPart.CFrame = newCFrame
+    end
 end
 
 local function updateUI()
@@ -344,10 +406,15 @@ local function updateUI()
     if state.ticks == Config.MaxTicks then
         barFill.BackgroundColor3 = Color3.fromRGB(255, 200, 0)
         tickLabel.Text = "MAX TICKS REACHED!"
-        previewPart.Color = Color3.fromRGB(255, 200, 0)
-        selectionBox.Color3 = Color3.fromRGB(255, 200, 0)
+        tickLabel.TextColor3 = Color3.fromRGB(255, 200, 0)
+        if previewPart then
+            previewPart.Color = Color3.fromRGB(255, 200, 0)
+            selectionBox.Color3 = Color3.fromRGB(255, 200, 0)
+        end
     else
+        barFill.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
         tickLabel.Text = "TICKS: " .. state.ticks .. " / " .. Config.MaxTicks
+        tickLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
     end
 end
 
@@ -402,9 +469,8 @@ local function stopCharging()
     state.chargeCoroutine = nil
     state.chargingLock = false
     
-    if barBackground and state.uiVisible then
-        fadeOutUI()
-    end
+    -- Reset UI to idle state but keep visible
+    resetUI()
     
     if previewPart then
         previewPart.Size = HIDDEN_SIZE
@@ -412,7 +478,7 @@ local function stopCharging()
         selectionBox.Color3 = Color3.fromRGB(0, 255, 255)
     end
     
-    if state.ticks > 0 and not state.warpCooldown then
+    if state.ticks > 0 and not state.warpCooldown and not state.isRespawning then
         state.warpCooldown = true
         executeWarp(state.ticks)
         task.wait(Config.Cooldown)
@@ -425,13 +491,21 @@ end
 local function onInputBegan(input, gameProcessed)
     if gameProcessed then return end
     if not state.isLoaded then return end
+    if state.isTerminating then return end
     if input.KeyCode ~= Config.Key then return end
     if state.current == WarpState.WARPING then return end
     if state.isCharging then return end
+    if state.isRespawning then return end
+    
+    -- Check if character exists, if not try to initialize
     if not state.hrp then 
-        initializeCharacter()
-        if not state.hrp then return end
+        if not initializeCharacter() then
+            return
+        end
     end
+    
+    -- Reset UI before starting new charge
+    resetUI()
     
     state.isCharging = true
     state.current = WarpState.CHARGING
@@ -439,11 +513,11 @@ local function onInputBegan(input, gameProcessed)
     
     updateRaycastFilter()
     
-    if barBackground then
+    if mainFrame then
         barFill.Size = UDim2.new(1/Config.MaxTicks, 0, 1, 0)
         barFill.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
         tickLabel.Text = "TICKS: 1 / " .. Config.MaxTicks
-        fadeInUI()
+        tickLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
     end
     
     if previewPart then
@@ -464,16 +538,36 @@ end
 
 local function setupConnections()
     connections.characterAdded = player.CharacterAdded:Connect(function(newChar)
+        -- Mark respawning
+        state.isRespawning = true
+        
+        -- Clean up old character references
+        state.hrp = nil
+        state.character = nil
+        
+        -- Stop any ongoing charging
+        if state.isCharging then
+            state.isCharging = false
+            state.current = WarpState.IDLE
+            
+            if state.previewUpdateConnection then
+                state.previewUpdateConnection:Disconnect()
+                state.previewUpdateConnection = nil
+            end
+        end
+        
+        -- Update to new character after a small delay
+        task.wait(0.1)
         updateCharacter(newChar)
+        
         if previewPart then
             previewPart.Size = HIDDEN_SIZE
         end
-        if barBackground and state.uiVisible then
-            fadeOutUI()
-        end
+        
         state.current = WarpState.IDLE
         state.isCharging = false
         state.ticks = 0
+        state.isRespawning = false
         
         if state.previewUpdateConnection then
             state.previewUpdateConnection:Disconnect()
@@ -494,6 +588,9 @@ end
 setupConnections()
 
 local function cleanupSystem()
+    if state.isTerminating then return end
+    state.isTerminating = true
+    
     for _, conn in pairs(connections) do
         pcall(function()
             conn:Disconnect()
@@ -527,7 +624,12 @@ local function cleanupSystem()
     end
     
     uiSetupDone = false
-    state.uiVisible = false
+    state.isLoaded = false
+    
+    -- Clear global reference
+    _G.WarpSystem = nil
+    
+    print("Warp System Cleaned Up")
 end
 
 local function unloadSystem()
@@ -548,28 +650,25 @@ local function unloadSystem()
         end
     end
     
-    if barBackground and state.uiVisible then
-        fadeOutUI()
-    end
-    
     if previewPart then
         previewPart.Size = HIDDEN_SIZE
     end
     
-    print("🔄 Warp System Unloaded")
+    print("Warp System Unloaded")
 end
 
 local function loadSystem()
     if state.isLoaded then return end
     
     state.isLoaded = true
+    state.isTerminating = false
     
     if not connections.inputBegan then
         connections.inputBegan = UserInputService.InputBegan:Connect(onInputBegan)
         connections.inputEnded = UserInputService.InputEnded:Connect(onInputEnded)
     end
     
-    print("✅ Warp System Loaded")
+    print("Warp System Loaded")
 end
 
 local WarpModule = {
@@ -622,4 +721,5 @@ if script and script:IsA("ModuleScript") then
     return WarpModule
 else
     _G.WarpSystem = WarpModule
+    print("Warp System Loaded - Press E to charge and warp!")
 end
