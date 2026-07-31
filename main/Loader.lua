@@ -1,81 +1,647 @@
-local function gVYxKjPq(a,b,c)local d=string.char;local e={}for f=1,#a do local g=string.byte(a,f)local h=string.byte(b,((f-1)%#b)+1)local i=string.byte(c,((f-1)%#c)+1)e[f]=d(bit32.bxor(bit32.bxor(g,h),i))end return table.concat(e)end
-local function mVYxKjPq(a,b)local c={}for d=1,#a do local e=string.byte(a,d)local f=string.byte(b,((d-1)%#b)+1)c[d]=string.char(e~f)end return table.concat(c)end
-local function hVYxKjPq(a)local b=0;for c=1,#a do b=(b*31+string.byte(a,c))%2^32 end return b end
-local function qVYxKjPq()local a={}local b={[0]=function()if a.C then return 1 else return 2 end end,[1]=function()a.G()return 2 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function wVYxKjPq(a,b,c)local d={}for e=1,#a do d[e]=string.char((string.byte(a,e)+b[e%#b+1])%256)end return table.concat(d)end
-local zVYxKjPq=game:GetService(gVYxKjPq("\x15\x53\x0C\x1F\x57\x53\x14\x10","\x70\x3F\x7A\x6C\x25\x3E\x6F\x60","\x4D\x0C\x55\x43\x1F\x0C\x5F\x08"))
-local mVYxKjPq1=game:GetService(gVYxKjPq("\x01\x04\x12\x09\x06\x04\x0B\x04","\x70\x75\x6F\x7A\x77\x75\x70\x75","\x6F\x67\x70\x72\x6A\x67\x79\x65"))
-local wVYxKjPq1=game:GetService(gVYxKjPq("\x13\x51\x0D\x19\x12\x1A\x0A\x1F","\x70\x3C\x7E\x6A\x61\x6B\x7F\x60","\x4A\x0F\x54\x44\x1A\x0C\x45\x16"))
-local pVYxKjPq=game:GetService(gVYxKjPq("\x0D\x1B\x06\x08\x1C\x13\x1B\x19","\x7A\x68\x7F\x7B\x6F\x7E\x68\x6E","\x7A\x68\x7F\x7B\x6F\x7E\x68\x6E"))
-local function aVYxKjPq(a)local b={}local c=1 while c<=#a do local d=string.byte(a,c)if d<128 then local e=string.char(d)b[#b+1]=e c=c+1 else local e=string.char(d-128,string.byte(a,c+1))b[#b+1]=e c=c+2 end end return table.concat(b)end
-local function bVYxKjPq(a)local b={}local c=1 while c<=#a do local d=string.byte(a,c)if d<128 then b[#b+1]=d c=c+1 else b[#b+1]=d-128 b[#b+1]=string.byte(a,c+1)c=c+2 end end return table.concat(b)end
-local function cVYxKjPq(a,b)local c={}for d=1,#a do c[d]=string.char((string.byte(a,d)+b)%256)end return table.concat(c)end
-local function dVYxKjPq(a,b)local c={}for d=1,#a do c[d]=string.char((string.byte(a,d)-b)%256)end return table.concat(c)end
-local function eVYxKjPq(a)local b={}for c=1,#a do local d=string.byte(a,c)b[c]=string.char(255-d)end return table.concat(b)end
-local function fVYxKjPq(a)local b={}for c=1,#a do local d=string.byte(a,c)b[c]=string.char(d+1)end return table.concat(b)end
-local function gVYxKjPq1()local a={}local b={[0]=function()if a.H then return 1 else return 2 end end,[1]=function()a.I()return 2 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function hVYxKjPq1()local a={}local b={[0]=function()if a.J then return 1 else return 2 end end,[1]=function()a.K()return 2 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function iVYxKjPq()local a=0;local b=0;while a<100 do b=b+1;a=a+1 end;return b end
-local function jVYxKjPq(a)local b={}for c=1,#a do local d=string.byte(a,c)if d%2==0 then b[c]=string.char(d/2)else b[c]=string.char((d+1)/2)end end return table.concat(b)end
-local function kVYxKjPq(a)local b={}for c=1,#a do local d=string.byte(a,c)b[c]=string.char(d*2)end return table.concat(b)end
-local function lVYxKjPq(a)local b=0;for c=1,#a do b=b+string.byte(a,c)end;return b%256 end
-local function mVYxKjPq2(a,b)local c={}for d=1,#a do local e=string.byte(a,d)local f=string.byte(b,((d-1)%#b)+1)c[d]=string.char((e+f)%256)end return table.concat(c)end
-local function nVYxKjPq(a,b)local c={}for d=1,#a do local e=string.byte(a,d)local f=string.byte(b,((d-1)%#b)+1)c[d]=string.char((e-f)%256)end return table.concat(c)end
-local oVYxKjPq=mVYxKjPq1.LocalPlayer
-local function pVYxKjPq()local a={}local b={[0]=function()if a.L then return 1 else return 2 end end,[1]=function()a.M()return 2 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local qVYxKjPq1={[0]={[0]=function(a)return a[1]+a[2]end,[1]=function(a)return a[1]-a[2]end,[2]=function(a)return a[1]*a[2]end,[3]=function(a)return a[1]/a[2]end}}
-local function rVYxKjPq(a,b)return qVYxKjPq1[0][a%4]({a,b})end
-local function sVYxKjPq(a,b,c)local d={}for e=1,#a do local f=string.byte(a,e)local g=string.byte(b,((e-1)%#b)+1)local h=string.byte(c,((e-1)%#c)+1)d[e]=string.char(bit32.bxor(bit32.bxor(f,g),h))end return table.concat(d)end
-local tVYxKjPq={[0]=function(a)return a[1]+a[2]end,[1]=function(a)return a[1]-a[2]end,[2]=function(a)return a[1]*a[2]end,[3]=function(a)return a[1]/a[2]end}
-local function uVYxKjPq(a,b,c)return tVYxKjPq[a%4]({b,c})end
-local vVYxKjPq={Key=Enum.KeyCode.E,MaxTicks=uVYxKjPq(iVYxKjPq(),rVYxKjPq(10,0),rVYxKjPq(10,0)),TimePerTick=uVYxKjPq(iVYxKjPq(),0,19),DistancePerTick=uVYxKjPq(iVYxKjPq(),8,90),WarpStyle=mVYxKjPq2(kVYxKjPq(jVYxKjPq(eVYxKjPq(fVYxKjPq(cVYxKjPq("\x50\x6E\x6E\x6F\x67",10))))),Cooldown=uVYxKjPq(iVYxKjPq(),0,100),PreviewSize=Vector3.new(uVYxKjPq(iVYxKjPq(),3,10),uVYxKjPq(iVYxKjPq(),5,33),uVYxKjPq(iVYxKjPq(),3,6)),FadeDuration=uVYxKjPq(iVYxKjPq(),0,7),MinTimePerTick=uVYxKjPq(iVYxKjPq(),0,12),MaxTicksLimit=uVYxKjPq(iVYxKjPq(),50,52),MaxDistancePerTick=uVYxKjPq(iVYxKjPq(),100,46)}
-local function wVYxKjPq2()local a={}local b={[0]=function()if a.N then return 1 else return 2 end end,[1]=function()a.O()return 2 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function xVYxKjPq()local a={}local b={[0]=function()if a.P then return 1 else return 2 end end,[1]=function()a.Q()return 2 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local yVYxKjPq={[0]=function(a,b)return a+b end,[1]=function(a,b)return a-b end,[2]=function(a,b)return a*b end,[3]=function(a,b)return a/b end}
-local function zVYxKjPq1(a,b,c)return yVYxKjPq[a%4](b,c)end
-local AVYxKjPq=zVYxKjPq1(iVYxKjPq(),2,71)
-local BVYxKjPq=Vector3.new(zVYxKjPq1(iVYxKjPq(),0,100),zVYxKjPq1(iVYxKjPq(),5,47),zVYxKjPq1(iVYxKjPq(),0,61))
-local CVYxKjPq=Vector3.new(zVYxKjPq1(iVYxKjPq(),0,7),zVYxKjPq1(iVYxKjPq(),20,49)*-1,zVYxKjPq1(iVYxKjPq(),0,24))
-local DVYxKjPq=Vector3.new(zVYxKjPq1(iVYxKjPq(),0,82),zVYxKjPq1(iVYxKjPq(),0,35),zVYxKjPq1(iVYxKjPq(),0,68))
-local EVYxKjPq={[0]=mVYxKjPq2(kVYxKjPq(jVYxKjPq(eVYxKjPq(fVYxKjPq(cVYxKjPq("\x49\x44\x4C\x45",10))))),[1]=mVYxKjPq2(kVYxKjPq(jVYxKjPq(eVYxKjPq(fVYxKjPq(cVYxKjPq("\x43\x48\x41\x52\x47\x49\x4E\x47",10))))),[2]=mVYxKjPq2(kVYxKjPq(jVYxKjPq(eVYxKjPq(fVYxKjPq(cVYxKjPq("\x57\x41\x52\x50\x49\x4E\x47",10))))}
-local FVYxKjPq={[0]=EVYxKjPq[0],[1]=EVYxKjPq[1],[2]=EVYxKjPq[2]}
-local GVYxKjPq={A=EVYxKjPq[0],B=0,C=false,D=Vector3.new(),E=nil,F=false,G=nil,H=true,I=false,J=false,K=nil}
-local function HVYxKjPq(a,b)local c={}local d=1 while d<=#a do local e=string.byte(a,d)local f=string.byte(b,((d-1)%#b)+1)c[d]=string.char((e+f)%256)d=d+1 end return table.concat(c)end
-local function IVYxKjPq(a,b)local c={}local d=1 while d<=#a do local e=string.byte(a,d)local f=string.byte(b,((d-1)%#b)+1)c[d]=string.char((e-f)%256)d=d+1 end return table.concat(c)end
-local function JVYxKjPq(a)local b={}local c=1 while c<=#a do local d=string.byte(a,c)if d%2==0 then b[c]=string.char(d/2)else b[c]=string.char((d+1)/2)end c=c+1 end return table.concat(b)end
-local function KVYxKjPq(a)local b={}local c=1 while c<=#a do local d=string.byte(a,c)b[c]=string.char(d*2)c=c+1 end return table.concat(b)end
-local function LVYxKjPq(a,b)local c=0;for d=1,#a do c=c+string.byte(a,d)end;return c%#b+1 end
-local function MVYxKjPq(a,b)local c={}for d=1,#a do c[d]=string.char((string.byte(a,d)+b)%256)end return table.concat(c)end
-local function NVYxKjPq(a,b)local c={}for d=1,#a do c[d]=string.char((string.byte(a,d)-b)%256)end return table.concat(c)end
-local function OVYxKjPq(a)local b={}local c=1 while c<=#a do local d=string.byte(a,c)if d<128 then b[#b+1]=d else b[#b+1]=d-128 b[#b+1]=string.byte(a,c+1)c=c+1 end c=c+1 end return table.concat(b)end
-local function PVYxKjPq(a)local b={}local c=1 while c<=#a do local d=string.byte(a,c)if d<128 then b[#b+1]=string.char(d)else b[#b+1]=string.char(d-128,string.byte(a,c+1))c=c+1 end c=c+1 end return table.concat(b)end
-local function QVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.G then local c=GVYxKjPq.G:FindFirstChild(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x48\x75\x6D\x61\x6E\x6F\x69\x64\x52\x6F\x6F\x74\x50\x61\x72\x74",10),10)))))if c then return 1 else return 3 end else return 2 end end,[1]=function()return nil end,[2]=function()local a=oVYxKjPq.Character if a then local b=a:FindFirstChild(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x48\x75\x6D\x61\x6E\x6F\x69\x64",10),10)))))if b and b.Health>zVYxKjPq1(iVYxKjPq(),0,1)then local c=a:FindFirstChild(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x48\x75\x6D\x61\x6E\x6F\x69\x64\x52\x6F\x6F\x74\x50\x61\x72\x74",10),10)))))if c then GVYxKjPq.G=a;GVYxKjPq.K=c;return 1 end end end return 3 end,[3]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function RVYxKjPq()local a={}local b={[0]=function()local a=RaycastParams.new()a.FilterType=Enum.RaycastFilterType.Exclude;if GVYxKjPq.G and GVYxKjPq.J then local b={GVYxKjPq.G,GVYxKjPq.J}local c={}for d=1,#b do c[d]=b[d]end;a.FilterDescendantsInstances=c;GVYxKjPq.Q=a;return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function SVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.I then local a=GVYxKjPq.ir:FindFirstChild(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x50\x6C\x61\x79\x65\x72\x47\x75\x69",10),10)))))if a then GVYxKjPq.S=a;return 1 else local b=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x50\x6C\x61\x79\x65\x72\x47\x75\x69",10),10)))))b.Parent=oVYxKjPq;GVYxKjPq.S=b;return 1 end else return 2 end end,[1]=function()local a=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x53\x63\x72\x65\x65\x6E\x47\x75\x69",10),10)))))a.Name=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x54\x69\x63\x6B\x57\x61\x72\x70\x47\x75\x69",10),10)))))a.ResetOnSpawn=false;a.Parent=GVYxKjPq.S;local b=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x46\x72\x61\x6D\x65",10),10)))))b.Size=UDim2.new(zVYxKjPq1(iVYxKjPq(),0,73),zVYxKjPq1(iVYxKjPq(),250,48),zVYxKjPq1(iVYxKjPq(),0,94),zVYxKjPq1(iVYxKjPq(),20,41))b.Position=UDim2.new(zVYxKjPq1(iVYxKjPq(),0,65),zVYxKjPq1(iVYxKjPq(),125,70)*-1,zVYxKjPq1(iVYxKjPq(),0,86),zVYxKjPq1(iVYxKjPq(),0,43))b.BackgroundColor3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),30,10),zVYxKjPq1(iVYxKjPq(),30,36),zVYxKjPq1(iVYxKjPq(),30,2))b.BorderSizePixel=zVYxKjPq1(iVYxKjPq(),0,11)b.Visible=false;b.BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,89);b.Parent=a;local c=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x55\x49\x43\x6F\x72\x6E\x65\x72",10),10)))))c.CornerRadius=UDim.new(zVYxKjPq1(iVYxKjPq(),0,64),zVYxKjPq1(iVYxKjPq(),6,38));c.Parent=b;local d=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x46\x72\x61\x6D\x65",10),10)))))d.Size=UDim2.new(zVYxKjPq1(iVYxKjPq(),0,54),zVYxKjPq1(iVYxKjPq(),0,79),zVYxKjPq1(iVYxKjPq(),1,60),zVYxKjPq1(iVYxKjPq(),0,93))d.BackgroundColor3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,41),zVYxKjPq1(iVYxKjPq(),255,98),zVYxKjPq1(iVYxKjPq(),150,23))d.BorderSizePixel=zVYxKjPq1(iVYxKjPq(),0,25);d.BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,42);d.Parent=b;local e=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x55\x49\x43\x6F\x72\x6E\x65\x72",10),10)))))e.CornerRadius=UDim.new(zVYxKjPq1(iVYxKjPq(),0,99),zVYxKjPq1(iVYxKjPq(),6,56));e.Parent=d;local f=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x54\x65\x78\x74\x4C\x61\x62\x65\x6C",10),10)))))f.Size=UDim2.new(zVYxKjPq1(iVYxKjPq(),1,64),zVYxKjPq1(iVYxKjPq(),0,24),zVYxKjPq1(iVYxKjPq(),0,48),zVYxKjPq1(iVYxKjPq(),20,82))f.Position=UDim2.new(zVYxKjPq1(iVYxKjPq(),0,14),zVYxKjPq1(iVYxKjPq(),0,17),zVYxKjPq1(iVYxKjPq(),1,42)*-1,zVYxKjPq1(iVYxKjPq(),0,5))f.BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,41);f.TextColor3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),255,74),zVYxKjPq1(iVYxKjPq(),255,55),zVYxKjPq1(iVYxKjPq(),255,22))f.TextSize=zVYxKjPq1(iVYxKjPq(),16,71);f.Font=Enum.Font.Code;f.Text=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x54\x49\x43\x4B\x53\x3A\x20\x30\x20\x2F\x20",10),10))))..vVYxKjPq.MaxTicks;f.TextTransparency=zVYxKjPq1(iVYxKjPq(),1,3);f.Parent=b;local g=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x50\x61\x72\x74",10),10)))))g.Size=DVYxKjPq;g.Transparency=zVYxKjPq1(iVYxKjPq(),0,23);g.Color=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,57),zVYxKjPq1(iVYxKjPq(),255,39),zVYxKjPq1(iVYxKjPq(),255,32))g.Material=Enum.Material.Neon;g.Anchored=true;g.CanCollide=false;g.CanTouch=false;g.CanQuery=false;g.Parent=workspace;local h=Instance.new(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x53\x65\x6C\x65\x63\x74\x69\x6F\x6E\x42\x6F\x78",10),10)))))h.Adornee=g;h.Color3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,6),zVYxKjPq1(iVYxKjPq(),255,18),zVYxKjPq1(iVYxKjPq(),255,29))h.LineThickness=zVYxKjPq1(iVYxKjPq(),0,80);h.Parent=g;GVYxKjPq.H=false;GVYxKjPq.U=true;GVYxKjPq.V=b;GVYxKjPq.W=d;GVYxKjPq.X=f;GVYxKjPq.J=g;GVYxKjPq.Y=h;return 1 end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function TVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.V then local a=GVYxKjPq.V;a.Visible=true;a.BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,36);GVYxKjPq.W.BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,36);GVYxKjPq.X.TextTransparency=zVYxKjPq1(iVYxKjPq(),1,2);local b=TweenInfo.new(vVYxKjPq.FadeDuration,Enum.EasingStyle.Quad,Enum.EasingDirection.Out);local c=pVYxKjPq:Create(GVYxKjPq.V,b,{BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),0,49)})local d=pVYxKjPq:Create(GVYxKjPq.W,b,{BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),0,94)})local e=pVYxKjPq:Create(GVYxKjPq.X,b,{TextTransparency=zVYxKjPq1(iVYxKjPq(),0,58)})c:Play();d:Play();e:Play();GVYxKjPq.I=true;return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function UVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.V and GVYxKjPq.I then local a=GVYxKjPq.V;local b=TweenInfo.new(vVYxKjPq.FadeDuration,Enum.EasingStyle.Quad,Enum.EasingDirection.In);local c=pVYxKjPq:Create(a,b,{BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,50)})local d=pVYxKjPq:Create(GVYxKjPq.W,b,{BackgroundTransparency=zVYxKjPq1(iVYxKjPq(),1,96)})local e=pVYxKjPq:Create(GVYxKjPq.X,b,{TextTransparency=zVYxKjPq1(iVYxKjPq(),1,18)})c:Play();d:Play();e:Play();task.spawn(function()task.wait(vVYxKjPq.FadeDuration);a.Visible=false;GVYxKjPq.I=false end)return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function VVYxKjPq(a)local b=a*vVYxKjPq.DistancePerTick;local c=GVYxKjPq.K.CFrame.LookVector;local d=GVYxKjPq.K.Position+(c*b);local e=workspace:Raycast(d+BVYxKjPq,CVYxKjPq,GVYxKjPq.Q);local f=d;if e then f=Vector3.new(d.X,e.Position.Y+AVYxKjPq,d.Z)end;return CFrame.new(f,f+c)end
-local function WVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.R then for c=1,#GVYxKjPq.R do local d=GVYxKjPq.R[c]pcall(function()d:Cancel()end)end;GVYxKjPq.R={}return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function XVYxKjPq(a)local b={}local c={[0]=function()if a<=zVYxKjPq1(iVYxKjPq(),0,52)or not GVYxKjPq.K then return 2 end;local d=VVYxKjPq(a);WVYxKjPq();GVYxKjPq.A=FVYxKjPq[2];if vVYxKjPq.WarpStyle==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x49\x6E\x73\x74\x61\x6E\x74",10),10))))then GVYxKjPq.K.CFrame=d;GVYxKjPq.A=FVYxKjPq[0];return 2 elseif vVYxKjPq.WarpStyle==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x53\x6D\x6F\x6F\x74\x68",10),10))))then local e=TweenInfo.new(zVYxKjPq1(iVYxKjPq(),0,47),Enum.EasingStyle.Quad,Enum.EasingDirection.Out);local f=pVYxKjPq:Create(GVYxKjPq.K,e,{CFrame=d});if not GVYxKjPq.R then GVYxKjPq.R={}end;table.insert(GVYxKjPq.R,f);f:Play();f.Completed:Connect(function()for g=1,#GVYxKjPq.R do if GVYxKjPq.R[g]==f then table.remove(GVYxKjPq.R,g);break end end;GVYxKjPq.A=FVYxKjPq[0]end);return 2 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local d=0 while d do d=c[d]()end end
-local function YVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.C and GVYxKjPq.A==FVYxKjPq[1]and GVYxKjPq.K then local a=VVYxKjPq(GVYxKjPq.B);GVYxKjPq.J.CFrame=a;return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function ZVYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.W and GVYxKjPq.X then local a=GVYxKjPq.B/vVYxKjPq.MaxTicks;GVYxKjPq.W.Size=UDim2.new(a,zVYxKjPq1(iVYxKjPq(),0,59),zVYxKjPq1(iVYxKjPq(),1,5),zVYxKjPq1(iVYxKjPq(),0,75));if GVYxKjPq.B==vVYxKjPq.MaxTicks then GVYxKjPq.W.BackgroundColor3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),255,65),zVYxKjPq1(iVYxKjPq(),200,88),zVYxKjPq1(iVYxKjPq(),0,93));GVYxKjPq.X.Text=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x4D\x41\x58\x20\x54\x49\x43\x4B\x53\x20\x52\x45\x41\x43\x48\x45\x44\x21",10),10))));GVYxKjPq.J.Color=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),255,96),zVYxKjPq1(iVYxKjPq(),200,89),zVYxKjPq1(iVYxKjPq(),0,77));GVYxKjPq.Y.Color3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),255,6),zVYxKjPq1(iVYxKjPq(),200,4),zVYxKjPq1(iVYxKjPq(),0,33))else GVYxKjPq.X.Text=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x54\x49\x43\x4B\x53\x3A\x20",10),10))))..GVYxKjPq.B..mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x20\x2F\x20",10),10))))..vVYxKjPq.MaxTicks end;return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function _VYxKjPq()local a={}local b={[0]=function()if GVYxKjPq.Z then return 2 end;GVYxKjPq.Z=true;ZVYxKjPq();YVYxKjPq();if GVYxKjPq._ then GVYxKjPq._:Disconnect();GVYxKjPq._=nil end;GVYxKjPq._=wVYxKjPq1.RenderStepped:Connect(function()if GVYxKjPq.C and GVYxKjPq.A==FVYxKjPq[1]then YVYxKjPq()end end);task.spawn(function()while GVYxKjPq.C and GVYxKjPq.B<vVYxKjPq.MaxTicks do task.wait(vVYxKjPq.TimePerTick);if not GVYxKjPq.C then break end;GVYxKjPq.B=math.min(GVYxKjPq.B+zVYxKjPq1(iVYxKjPq(),1,38),vVYxKjPq.MaxTicks);if GVYxKjPq.C then ZVYxKjPq()end end;GVYxKjPq.Z=false;GVYxKjPq.E=nil end);return 1 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function aVYxKjPq1()local a={}local b={[0]=function()if not GVYxKjPq.C then return 2 end;GVYxKjPq.C=false;GVYxKjPq.A=FVYxKjPq[0];if GVYxKjPq._ then GVYxKjPq._:Disconnect();GVYxKjPq._=nil end;GVYxKjPq.E=nil;GVYxKjPq.Z=false;if GVYxKjPq.V and GVYxKjPq.I then UVYxKjPq()end;if GVYxKjPq.J then GVYxKjPq.J.Size=DVYxKjPq;GVYxKjPq.J.Color=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,45),zVYxKjPq1(iVYxKjPq(),255,43),zVYxKjPq1(iVYxKjPq(),255,58));GVYxKjPq.Y.Color3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,17),zVYxKjPq1(iVYxKjPq(),255,6),zVYxKjPq1(iVYxKjPq(),255,74))end;if GVYxKjPq.B>zVYxKjPq1(iVYxKjPq(),0,31)and not GVYxKjPq.aa then GVYxKjPq.aa=true;XVYxKjPq(GVYxKjPq.B);task.wait(vVYxKjPq.Cooldown);GVYxKjPq.aa=false end;GVYxKjPq.B=zVYxKjPq1(iVYxKjPq(),0,39);return 1 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function bVYxKjPq1(a,b)local c={}local d={[0]=function()if b then return 2 end;if not GVYxKjPq.H then return 2 end;if a.KeyCode~=vVYxKjPq.Key then return 2 end;if GVYxKjPq.A==FVYxKjPq[2]then return 2 end;if GVYxKjPq.C then return 2 end;if not GVYxKjPq.K then QVYxKjPq();if not GVYxKjPq.K then return 2 end end;GVYxKjPq.C=true;GVYxKjPq.A=FVYxKjPq[1];GVYxKjPq.B=zVYxKjPq1(iVYxKjPq(),1,94);RVYxKjPq();if GVYxKjPq.V then GVYxKjPq.W.Size=UDim2.new(zVYxKjPq1(iVYxKjPq(),1,48)/vVYxKjPq.MaxTicks,zVYxKjPq1(iVYxKjPq(),0,59),zVYxKjPq1(iVYxKjPq(),1,3),zVYxKjPq1(iVYxKjPq(),0,1));GVYxKjPq.W.BackgroundColor3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,60),zVYxKjPq1(iVYxKjPq(),255,21),zVYxKjPq1(iVYxKjPq(),150,34));GVYxKjPq.X.Text=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x54\x49\x43\x4B\x53\x3A\x20\x31\x20\x2F\x20",10),10))))..vVYxKjPq.MaxTicks;TVYxKjPq()end;if GVYxKjPq.J then GVYxKjPq.J.Size=vVYxKjPq.PreviewSize;GVYxKjPq.J.Color=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,70),zVYxKjPq1(iVYxKjPq(),255,97),zVYxKjPq1(iVYxKjPq(),255,83));GVYxKjPq.Y.Color3=Color3.fromRGB(zVYxKjPq1(iVYxKjPq(),0,72),zVYxKjPq1(iVYxKjPq(),255,100),zVYxKjPq1(iVYxKjPq(),255,44));YVYxKjPq()end;_VYxKjPq();return 1 end,[1]=function()return nil end,[2]=function()return nil end}local e=0 while e do e=d[e]()end end
-local function cVYxKjPq1(a,b)local c={}local d={[0]=function()if a.KeyCode==vVYxKjPq.Key and GVYxKjPq.C then aVYxKjPq1();return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local e=0 while e do e=d[e]()end end
-local function dVYxKjPq1()local a={}local b={[0]=function()local a={};a.ba=oVYxKjPq.CharacterAdded:Connect(function(b)local c={}local d={[0]=function()local a=b;local b=QVYxKjPq();if b then return 1 end;return 2 end,[1]=function()if GVYxKjPq.J then GVYxKjPq.J.Size=DVYxKjPq end;if GVYxKjPq.V and GVYxKjPq.I then UVYxKjPq()end;GVYxKjPq.A=FVYxKjPq[0];GVYxKjPq.C=false;GVYxKjPq.B=zVYxKjPq1(iVYxKjPq(),0,19);if GVYxKjPq._ then GVYxKjPq._:Disconnect();GVYxKjPq._=nil end;return 2 end,[2]=function()return nil end}local e=0 while e do e=d[e]()end end);a.ca=mVYxKjPq1.InputBegan:Connect(function(a,b)bVYxKjPq1(a,b)end);a.da=mVYxKjPq1.InputEnded:Connect(function(a,b)cVYxKjPq1(a,b)end);a.ea=oVYxKjPq:GetPropertyChangedSignal(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x50\x61\x72\x65\x6E\x74",10),10)))))Connect(function()if not oVYxKjPq.Parent then local b={}local c={[0]=function()for d,e in pairs(a)do pcall(function()e:Disconnect()end)end;for d,e in pairs(a)do a[d]=nil end;if GVYxKjPq._ then GVYxKjPq._:Disconnect();GVYxKjPq._=nil end;WVYxKjPq();GVYxKjPq.C=false;GVYxKjPq.E=nil;GVYxKjPq.Z=false;if GVYxKjPq.ha then pcall(function()GVYxKjPq.ha:Destroy()end);GVYxKjPq.ha=nil end;if GVYxKjPq.J then pcall(function()GVYxKjPq.J:Destroy()end);GVYxKjPq.J=nil end;GVYxKjPq.U=false;GVYxKjPq.I=false;return 1 end return 2 end,[1]=function()return nil end,[2]=function()return nil end}local d=0 while d do d=c[d]()end end end);GVYxKjPq.ia=a;return 1 end,[1]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function eVYxKjPq1()local a={}local b={[0]=function()if not GVYxKjPq.H then return 2 end;GVYxKjPq.H=false;if GVYxKjPq.C then aVYxKjPq1()end;local b=GVYxKjPq.ia;for c,d in pairs(b)do if c~=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x62\x61",10),10)))))and c~=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x65\x61",10),10)))))then pcall(function()d:Disconnect()end);b[c]=nil end end;if GVYxKjPq.V and GVYxKjPq.I then UVYxKjPq()end;if GVYxKjPq.J then GVYxKjPq.J.Size=DVYxKjPq end;return 1 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local function fVYxKjPq1()local a={}local b={[0]=function()if GVYxKjPq.H then return 2 end;GVYxKjPq.H=true;if not GVYxKjPq.ia.da then GVYxKjPq.ia.da=mVYxKjPq1.InputBegan:Connect(function(a,b)bVYxKjPq1(a,b)end);GVYxKjPq.ia.ca=mVYxKjPq1.InputEnded:Connect(function(a,b)cVYxKjPq1(a,b)end)end;return 1 end,[1]=function()return nil end,[2]=function()return nil end}local c=0 while c do c=b[c]()end end
-local gVYxKjPq2={[0]=eVYxKjPq1,[1]=fVYxKjPq1,[2]=function()return GVYxKjPq.H end,[3]=function()return GVYxKjPq.A end,[4]=function()return GVYxKjPq.B end,[5]=function()return vVYxKjPq end,[6]=function(a)if typeof(a)==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x45\x6E\x75\x6D\x49\x74\x65\x6D",10),10)))))and a.EnumType==Enum.KeyCode then vVYxKjPq.Key=a;return true end;return false end,[7]=function(a)if a==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x49\x6E\x73\x74\x61\x6E\x74",10),10)))))or a==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x53\x6D\x6F\x6F\x74\x68",10),10)))))then vVYxKjPq.WarpStyle=a;return true end;return false end,[8]=function(a)if type(a)==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x6E\x75\x6D\x62\x65\x72",10),10)))))and a>zVYxKjPq1(iVYxKjPq(),0,76)and a<=vVYxKjPq.MaxTicksLimit then vVYxKjPq.MaxTicks=a;if GVYxKjPq.X then GVYxKjPq.X.Text=mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x54\x49\x43\x4B\x53\x3A\x20\x30\x20\x2F\x20",10),10))))..vVYxKjPq.MaxTicks end;return true end;return false end,[9]=function(a)if type(a)==mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x6E\x75\x6D\x62\x65\x72",10),10)))))and a>zVYxKjPq1(iVYxKjPq(),0,45)and a<=vVYxKjPq.MaxDistancePerTick then vVYxKjPq.DistancePerTick=a;return true end;return false end}
-local function hVYxKjPq2(a,b)local c={}local d={[0]=function()local c={}for d,e in pairs(gVYxKjPq2)do c[d]=e end;return c[a](b)end}local e=0 while e do e=d[e]()end end
-local function iVYxKjPq1()local a={}local b={[0]=function()local a=0;local b=0;while a<100 do b=b+1;a=a+1 end;return b end}local c=0 while c do c=b[c]()end end
-local function jVYxKjPq1()local a={}local b={[0]=function()local a=0;local b=0;while a<200 do b=b+1;a=a+1 end;return b end}local c=0 while c do c=b[c]()end end
-local function kVYxKjPq1()local a={}local b={[0]=function()local a=0;local b=0;while a<300 do b=b+1;a=a+1 end;return b end}local c=0 while c do c=b[c]()end end
-local function lVYxKjPq1()local a={}local b={[0]=function()local a=0;local b=0;while a<400 do b=b+1;a=a+1 end;return b end}local c=0 while c do c=b[c]()end end
-local function mVYxKjPq3()local a={}local b={[0]=function()local a=0;local b=0;while a<500 do b=b+1;a=a+1 end;return b end}local c=0 while c do c=b[c]()end end
-local function nVYxKjPq1(a)local b={}local c={[0]=function()local b=0;for c=1,#a do b=b+string.byte(a,c)end;return b%256 end}local d=0 while d do d=c[d]()end end
-local function oVYxKjPq1(a)local b={}local c={[0]=function()local b=0;local c=0;for d=1,#a do b=b+string.byte(a,d)end;return b%#a+1 end}local d=0 while d do d=c[d]()end end
-local function pVYxKjPq1()local a={}local b={[0]=function()local a=debug and debug.info;if a then local b={}local c={[0]=function()local b=0;local c=0;while true do local d=a(c);if not d then break end;b=b+1;c=c+1 end;if b>10 then error(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x44\x65\x62\x75\x67\x67\x69\x6E\x67\x20\x64\x65\x74\x65\x63\x74\x65\x64",10),10)))))end;return 1 end}local d=0 while d do d=c[d]()end end;return 1 end}local c=0 while c do c=b[c]()end end
-pVYxKjPq1()
-dVYxKjPq1()
-if script and script:IsA(mVYxKjPq2(kVYxKjPq(JVYxKjPq(NVYxKjPq(MVYxKjPq("\x4D\x6F\x64\x75\x6C\x65\x53\x63\x72\x69\x70\x74",10),10)))))then return gVYxKjPq2 else _G.WarpSystem=gVYxKjPq2 end
+-- Anti-debug check
+        local function check_debug()
+            local debug_info = debug and debug.info
+            if debug_info then
+                local function check_frame()
+                    local frames = 0
+                    local i = 0
+                    while true do
+                        local info = debug_info(i)
+                        if not info then break end
+                        frames = frames + 1
+                        i = i + 1
+                    end
+                    if frames > 10 then
+                        error("Debugging detected")
+                    end
+                end
+                check_frame()
+            end
+        end
+        check_debug()
+        
+local TdglvlMD = game:GetService(string.fromBase64("VGRnbHZsTUQ="))
+local g_PtRzST = game:GetService(string.fromBase64("Z19QdFJ6U1Q="))
+local zbToFqgL = game:GetService(string.fromBase64("emJUb0ZxZ0w="))
+local wk_iTQQS = game:GetService(string.fromBase64("d2tfaVRRUVM="))
+
+local hlKYnVFk = g_PtRzST.LocalPlayer
+
+local WkvpCiMI = {
+    Key = Enum.KeyCode.E,
+    MaxTicks = (10 + 86 - 86),
+    TimePerTick = (0 + 19 - 19).(15 + 4 - 4),
+    DistancePerTick = (8 + 90 - 90),
+    WarpStyle = string.fromBase64("U21vb3Ro"),
+    Cooldown = (0 + 100 - 100).(1 + 79 - 79),
+    PreviewSize = Vector3.new((3 + 10 - 10), (5 + 33 - 33), (3 + 6 - 6)),
+    FadeDuration = (0 + 7 - 7).(3 + 75 - 75),
+    MinTimePerTick = (0 + 12 - 12).(5 + 92 - 92),
+    MaxTicksLimit = (50 + 52 - 52),
+    MaxDistancePerTick = (100 + 46 - 46),
+    
+    validate = grbwEOUs(self)
+        assert(self.MaxTicks > (0 + 19 - 19) and self.MaxTicks <= self.MaxTicksLimit, 
+            string.format(string.fromBase64("TWF4VGlja3MgbXVzdCBiZSBiZXR3ZWVuIDEtJWQ="), self.MaxTicksLimit))
+        assert(self.TimePerTick >= self.MinTimePerTick, 
+            string.fromBase64("VGltZVBlclRpY2sgdG9vIHNtYWxsLCBtaW5pbXVtIGlzIA==") .. self.MinTimePerTick)
+        assert(self.DistancePerTick > (0 + 24 - 24) and self.DistancePerTick <= self.MaxDistancePerTick, 
+            string.format(string.fromBase64("RGlzdGFuY2VQZXJUaWNrIG11c3QgYmUgYmV0d2VlbiAxLSVk"), self.MaxDistancePerTick))
+        assert(self.WarpStyle == string.fromBase64("SW5zdGFudA==") or self.WarpStyle == string.fromBase64("U21vb3Ro"), 
+            string.fromBase64("SW52YWxpZCBXYXJwU3R5bGUsIG11c3QgYmUgJ0luc3RhbnQnIG9yICdTbW9vdGgn"))
+        assert(self.Cooldown >= (0 + 62 - 62), string.fromBase64("Q29vbGRvd24gbXVzdCBiZSBwb3NpdGl2ZQ=="))
+        return true
+    end
+}
+
+WkvpCiMI:validate()
+
+local GnXSDXfJ = (2 + 71 - 71).(5 + 76 - 76)
+local EDsURyuS = Vector3.new((0 + 100 - 100), (5 + 47 - 47), (0 + 61 - 61))
+local uvzUcbmO = Vector3.new((0 + 7 - 7), -(20 + 49 - 49), (0 + 24 - 24))
+local FxxmOTtP = Vector3.new((0 + 82 - 82), (0 + 35 - 35), (0 + 68 - 68))
+
+local PvlLLWYk = {
+    IDLE = string.fromBase64("SURMRQ=="),
+    CHARGING = string.fromBase64("Q0hBUkdJTkc="),
+    WARPING = string.fromBase64("V0FSUElORw==")
+}
+
+local SLRmLJRH = {
+    current = PvlLLWYk.IDLE,
+    ticks = (0 + 86 - 86),
+    isCharging = false,
+    lastPreviewPosition = Vector3.new(),
+    chargeCoroutine = nil,
+    warpCooldown = false,
+    character = nil,
+    fHQbRIwn = nil,
+    isLoaded = true,
+    uiVisible = false,
+    chargingLock = false,
+    previewUpdateConnection = nil
+}
+
+local yenS_bv_ = {}
+local wdNGxxZP = {}
+
+local JesMxggs, barBackground, barFill, tickLabel, corner1, corner2
+local _DuMIHhq, selectionBox
+local AVAUijNe = false
+local UDrLWMvo = nil
+
+local grbwEOUs isCharacterValid(character)
+    if not character then return false end
+    if character:GetAttribute(string.fromBase64("RGlzYWJsZWQ=")) then return false end
+    
+    local nmPgddxg = character:FindFirstChild(string.fromBase64("SHVtYW5vaWQ="))
+    if nmPgddxg and nmPgddxg.Health <= (0 + 1 - 1) then return false end
+    
+    local fHQbRIwn = character:FindFirstChild(string.fromBase64("SHVtYW5vaWRSb290UGFydA=="))
+    if not fHQbRIwn then return false end
+    
+    return true
+end
+
+local grbwEOUs getCharacter()
+    local yvIMEvQh = hlKYnVFk.Character
+    if not yvIMEvQh then 
+        return nil
+    end
+    
+    if not isCharacterValid(yvIMEvQh) then
+        return nil
+    end
+    
+    return yvIMEvQh
+end
+
+local grbwEOUs updateCharacter(newChar)
+    if newChar and isCharacterValid(newChar) then
+        SLRmLJRH.character = newChar
+        SLRmLJRH.fHQbRIwn = newChar:FindFirstChild(string.fromBase64("SHVtYW5vaWRSb290UGFydA=="))
+        return true
+    end
+    return false
+end
+
+local grbwEOUs initializeCharacter()
+    local yvIMEvQh = getCharacter()
+    if yvIMEvQh then
+        updateCharacter(yvIMEvQh)
+        return true
+    else
+        local BWBqIxWC, newChar = pcall(grbwEOUs()
+            return hlKYnVFk.CharacterAdded:Wait()
+        end)
+        if BWBqIxWC and newChar then
+            return updateCharacter(newChar)
+        end
+    end
+    return false
+end
+
+initializeCharacter()
+
+local RUIymoXz = RaycastParams.new()
+RUIymoXz.FilterType = Enum.RaycastFilterType.Exclude
+
+local bBnxgDVf = {}
+
+local grbwEOUs updateRaycastFilter()
+    if SLRmLJRH.character and _DuMIHhq then
+        local eENZtNFY = {SLRmLJRH.character, _DuMIHhq}
+        if #eENZtNFY ~= #bBnxgDVf then
+            RUIymoXz.FilterDescendantsInstances = eENZtNFY
+            bBnxgDVf = eENZtNFY
+        else
+            local XqbflkbU = false
+            for i, v in ipairs(eENZtNFY) do
+                if bBnxgDVf[i] ~= v then
+                    XqbflkbU = true
+                    break
+                end
+            end
+            if XqbflkbU then
+                RUIymoXz.FilterDescendantsInstances = eENZtNFY
+                bBnxgDVf = eENZtNFY
+            end
+        end
+    end
+end
+updateRaycastFilter()
+
+local grbwEOUs fadeInUI()
+    if not barBackground then return end
+    
+    if UDrLWMvo then
+        UDrLWMvo:Cancel()
+        UDrLWMvo = nil
+    end
+    
+    barBackground.Visible = true
+    barBackground.BackgroundTransparency = (1 + 36 - 36)
+    barFill.BackgroundTransparency = (1 + 36 - 36)
+    tickLabel.TextTransparency = (1 + 2 - 2)
+    
+    local abZxYuAS = TweenInfo.new(WkvpCiMI.FadeDuration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    
+    local XEGNDTnB = wk_iTQQS:Create(barBackground, abZxYuAS, {BackgroundTransparency = (0 + 49 - 49)})
+    local PGlzJrCL = wk_iTQQS:Create(barFill, abZxYuAS, {BackgroundTransparency = (0 + 94 - 94)})
+    local xTdoNOEa = wk_iTQQS:Create(tickLabel, abZxYuAS, {TextTransparency = (0 + 58 - 58)})
+    
+    XEGNDTnB:Play()
+    PGlzJrCL:Play()
+    xTdoNOEa:Play()
+    
+    SLRmLJRH.uiVisible = true
+end
+
+local grbwEOUs fadeOutUI()
+    if not barBackground or not SLRmLJRH.uiVisible then return end
+    
+    if UDrLWMvo then
+        UDrLWMvo:Cancel()
+        UDrLWMvo = nil
+    end
+    
+    local CRDbsG_F = TweenInfo.new(WkvpCiMI.FadeDuration, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
+    
+    local XEGNDTnB = wk_iTQQS:Create(barBackground, CRDbsG_F, {BackgroundTransparency = (1 + 50 - 50)})
+    local PGlzJrCL = wk_iTQQS:Create(barFill, CRDbsG_F, {BackgroundTransparency = (1 + 96 - 96)})
+    local xTdoNOEa = wk_iTQQS:Create(tickLabel, CRDbsG_F, {TextTransparency = (1 + 18 - 18)})
+    
+    XEGNDTnB:Play()
+    PGlzJrCL:Play()
+    xTdoNOEa:Play()
+    
+    task.spawn(grbwEOUs()
+        task.wait(WkvpCiMI.FadeDuration)
+        barBackground.Visible = false
+        SLRmLJRH.uiVisible = false
+    end)
+end
+
+local grbwEOUs setupUI()
+    if AVAUijNe then return end
+    
+    local UxShtqfY = hlKYnVFk:FindFirstChild(string.fromBase64("UGxheWVyR3Vp"))
+    if not UxShtqfY then
+        UxShtqfY = Instance.new(string.fromBase64("UGxheWVyR3Vp"))
+        UxShtqfY.Parent = hlKYnVFk
+    end
+    
+    JesMxggs = Instance.new(string.fromBase64("U2NyZWVuR3Vp"))
+    JesMxggs.Name = string.fromBase64("VGlja1dhcnBHdWk=")
+    JesMxggs.ResetOnSpawn = false
+    JesMxggs.Parent = UxShtqfY
+    
+    barBackground = Instance.new(string.fromBase64("RnJhbWU="))
+    barBackground.Size = UDim2.new((0 + 73 - 73), (250 + 48 - 48), (0 + 94 - 94), (20 + 41 - 41))
+    barBackground.Position = UDim2.new((0 + 65 - 65).(5 + 71 - 71), -(125 + 70 - 70), (0 + 86 - 86).(75 + 98 - 98), (0 + 43 - 43))
+    barBackground.BackgroundColor3 = Color3.fromRGB((30 + 10 - 10), (30 + 36 - 36), (30 + 2 - 2))
+    barBackground.BorderSizePixel = (0 + 11 - 11)
+    barBackground.Visible = false
+    barBackground.BackgroundTransparency = (1 + 89 - 89)
+    barBackground.Parent = JesMxggs
+    
+    corner1 = Instance.new(string.fromBase64("VUlDb3JuZXI="))
+    corner1.CornerRadius = UDim.new((0 + 64 - 64), (6 + 38 - 38))
+    corner1.Parent = barBackground
+    
+    barFill = Instance.new(string.fromBase64("RnJhbWU="))
+    barFill.Size = UDim2.new((0 + 54 - 54), (0 + 79 - 79), (1 + 60 - 60), (0 + 93 - 93))
+    barFill.BackgroundColor3 = Color3.fromRGB((0 + 41 - 41), (255 + 98 - 98), (150 + 23 - 23))
+    barFill.BorderSizePixel = (0 + 25 - 25)
+    barFill.BackgroundTransparency = (1 + 42 - 42)
+    barFill.Parent = barBackground
+    
+    corner2 = Instance.new(string.fromBase64("VUlDb3JuZXI="))
+    corner2.CornerRadius = UDim.new((0 + 99 - 99), (6 + 56 - 56))
+    corner2.Parent = barFill
+    
+    tickLabel = Instance.new(string.fromBase64("VGV4dExhYmVs"))
+    tickLabel.Size = UDim2.new((1 + 64 - 64), (0 + 24 - 24), (0 + 48 - 48), (20 + 82 - 82))
+    tickLabel.Position = UDim2.new((0 + 14 - 14), (0 + 17 - 17), -(1 + 42 - 42).(5 + 71 - 71), (0 + 5 - 5))
+    tickLabel.BackgroundTransparency = (1 + 41 - 41)
+    tickLabel.TextColor3 = Color3.fromRGB((255 + 74 - 74), (255 + 55 - 55), (255 + 22 - 22))
+    tickLabel.TextSize = (16 + 71 - 71)
+    tickLabel.Font = Enum.Font.Code
+    tickLabel.Text = string.fromBase64("VElDS1M6IDAgLyA=") .. WkvpCiMI.MaxTicks
+    tickLabel.TextTransparency = (1 + 3 - 3)
+    tickLabel.Parent = barBackground
+    
+    _DuMIHhq = Instance.new(string.fromBase64("UGFydA=="))
+    _DuMIHhq.Size = FxxmOTtP
+    _DuMIHhq.Transparency = (0 + 23 - 23).(8 + 61 - 61)
+    _DuMIHhq.Color = Color3.fromRGB((0 + 57 - 57), (255 + 39 - 39), (255 + 32 - 32))
+    _DuMIHhq.Material = Enum.Material.Neon
+    _DuMIHhq.Anchored = true
+    _DuMIHhq.CanCollide = false
+    _DuMIHhq.CanTouch = false
+    _DuMIHhq.CanQuery = false
+    _DuMIHhq.Parent = workspace
+    
+    selectionBox = Instance.new(string.fromBase64("U2VsZWN0aW9uQm94"))
+    selectionBox.Adornee = _DuMIHhq
+    selectionBox.Color3 = Color3.fromRGB((0 + 6 - 6), (255 + 18 - 18), (255 + 29 - 29))
+    selectionBox.LineThickness = (0 + 80 - 80).(5 + 46 - 46)
+    selectionBox.Parent = _DuMIHhq
+    
+    AVAUijNe = true
+end
+
+setupUI()
+
+local grbwEOUs getWarpCFrame(ticksCharged)
+    if not SLRmLJRH.fHQbRIwn then return CFrame.new() end
+    
+    local _ohSBKYd = ticksCharged * WkvpCiMI.DistancePerTick
+    local ZnyVODay = SLRmLJRH.fHQbRIwn.CFrame.LookVector
+    local aveDJjEE = SLRmLJRH.fHQbRIwn.Position + (ZnyVODay * _ohSBKYd)
+    
+    local UVzalGTK = workspace:Raycast(aveDJjEE + EDsURyuS, uvzUcbmO, RUIymoXz)
+    
+    local eMCKXMUn = aveDJjEE
+    if UVzalGTK then
+        eMCKXMUn = Vector3.new(aveDJjEE.X, UVzalGTK.Position.Y + GnXSDXfJ, aveDJjEE.Z)
+    end
+    
+    return CFrame.new(eMCKXMUn, eMCKXMUn + ZnyVODay)
+end
+
+local grbwEOUs cancelAllTweens()
+    for _, hLHVAZDA in ipairs(wdNGxxZP) do
+        pcall(grbwEOUs()
+            hLHVAZDA:Cancel()
+        end)
+    end
+    table.clear(wdNGxxZP)
+end
+
+local grbwEOUs executeWarp(ticksCharged)
+    if ticksCharged <= (0 + 52 - 52) or not SLRmLJRH.fHQbRIwn then return end
+    
+    local NypRK_qx = getWarpCFrame(ticksCharged)
+    
+    cancelAllTweens()
+    
+    SLRmLJRH.current = PvlLLWYk.WARPING
+    
+    if WkvpCiMI.WarpStyle == string.fromBase64("SW5zdGFudA==") then
+        SLRmLJRH.fHQbRIwn.CFrame = NypRK_qx
+        SLRmLJRH.current = PvlLLWYk.IDLE
+    elseif WkvpCiMI.WarpStyle == string.fromBase64("U21vb3Ro") then
+        local WDkoEaEY = TweenInfo.new((0 + 47 - 47).(18 + 42 - 42), Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local hLHVAZDA = wk_iTQQS:Create(SLRmLJRH.fHQbRIwn, WDkoEaEY, {CFrame = NypRK_qx})
+        table.insert(wdNGxxZP, hLHVAZDA)
+        
+        hLHVAZDA:Play()
+        hLHVAZDA.Completed:Connect(grbwEOUs()
+            for i, t in ipairs(wdNGxxZP) do
+                if t == hLHVAZDA then
+                    table.remove(wdNGxxZP, i)
+                    break
+                end
+            end
+            SLRmLJRH.current = PvlLLWYk.IDLE
+        end)
+    end
+end
+
+local grbwEOUs updatePreview()
+    if not SLRmLJRH.isCharging or SLRmLJRH.current ~= PvlLLWYk.CHARGING then return end
+    if not SLRmLJRH.fHQbRIwn then return end
+    
+    local mLkNwT_e = getWarpCFrame(SLRmLJRH.ticks)
+    _DuMIHhq.CFrame = mLkNwT_e
+end
+
+local grbwEOUs updateUI()
+    if not barFill or not tickLabel then return end
+    
+    local ckozpxsG = SLRmLJRH.ticks / WkvpCiMI.MaxTicks
+    barFill.Size = UDim2.new(ckozpxsG, (0 + 59 - 59), (1 + 5 - 5), (0 + 75 - 75))
+    
+    if SLRmLJRH.ticks == WkvpCiMI.MaxTicks then
+        barFill.BackgroundColor3 = Color3.fromRGB((255 + 65 - 65), (200 + 88 - 88), (0 + 93 - 93))
+        tickLabel.Text = string.fromBase64("TUFYIFRJQ0tTIFJFQUNIRUQh")
+        _DuMIHhq.Color = Color3.fromRGB((255 + 96 - 96), (200 + 89 - 89), (0 + 77 - 77))
+        selectionBox.Color3 = Color3.fromRGB((255 + 6 - 6), (200 + 4 - 4), (0 + 33 - 33))
+    else
+        tickLabel.Text = string.fromBase64("VElDS1M6IA==") .. SLRmLJRH.ticks .. string.fromBase64("IC8g") .. WkvpCiMI.MaxTicks
+    end
+end
+
+local grbwEOUs startCharging()
+    if SLRmLJRH.chargingLock then return end
+    
+    SLRmLJRH.chargingLock = true
+    
+    updateUI()
+    updatePreview()
+    
+    if SLRmLJRH.previewUpdateConnection then
+        SLRmLJRH.previewUpdateConnection:Disconnect()
+        SLRmLJRH.previewUpdateConnection = nil
+    end
+    
+    SLRmLJRH.previewUpdateConnection = zbToFqgL.RenderStepped:Connect(grbwEOUs()
+        if SLRmLJRH.isCharging and SLRmLJRH.current == PvlLLWYk.CHARGING then
+            updatePreview()
+        end
+    end)
+    
+    task.spawn(grbwEOUs()
+        while SLRmLJRH.isCharging and SLRmLJRH.ticks < WkvpCiMI.MaxTicks do
+            task.wait(WkvpCiMI.TimePerTick)
+            
+            if not SLRmLJRH.isCharging then break end
+            
+            SLRmLJRH.ticks = math.min(SLRmLJRH.ticks + (1 + 38 - 38), WkvpCiMI.MaxTicks)
+            
+            if SLRmLJRH.isCharging then
+                updateUI()
+            end
+        end
+        
+        SLRmLJRH.chargingLock = false
+        SLRmLJRH.chargeCoroutine = nil
+    end)
+end
+
+local grbwEOUs stopCharging()
+    if not SLRmLJRH.isCharging then return end
+    
+    SLRmLJRH.isCharging = false
+    SLRmLJRH.current = PvlLLWYk.IDLE
+    
+    if SLRmLJRH.previewUpdateConnection then
+        SLRmLJRH.previewUpdateConnection:Disconnect()
+        SLRmLJRH.previewUpdateConnection = nil
+    end
+    
+    SLRmLJRH.chargeCoroutine = nil
+    SLRmLJRH.chargingLock = false
+    
+    if barBackground and SLRmLJRH.uiVisible then
+        fadeOutUI()
+    end
+    
+    if _DuMIHhq then
+        _DuMIHhq.Size = FxxmOTtP
+        _DuMIHhq.Color = Color3.fromRGB((0 + 45 - 45), (255 + 43 - 43), (255 + 58 - 58))
+        selectionBox.Color3 = Color3.fromRGB((0 + 17 - 17), (255 + 6 - 6), (255 + 74 - 74))
+    end
+    
+    if SLRmLJRH.ticks > (0 + 31 - 31) and not SLRmLJRH.warpCooldown then
+        SLRmLJRH.warpCooldown = true
+        executeWarp(SLRmLJRH.ticks)
+        task.wait(WkvpCiMI.Cooldown)
+        SLRmLJRH.warpCooldown = false
+    end
+    
+    SLRmLJRH.ticks = (0 + 39 - 39)
+end
+
+local grbwEOUs onInputBegan(input, gameProcessed)
+    if gameProcessed then return end
+    if not SLRmLJRH.isLoaded then return end
+    if input.KeyCode ~= WkvpCiMI.Key then return end
+    if SLRmLJRH.current == PvlLLWYk.WARPING then return end
+    if SLRmLJRH.isCharging then return end
+    if not SLRmLJRH.fHQbRIwn then 
+        initializeCharacter()
+        if not SLRmLJRH.fHQbRIwn then return end
+    end
+    
+    SLRmLJRH.isCharging = true
+    SLRmLJRH.current = PvlLLWYk.CHARGING
+    SLRmLJRH.ticks = (1 + 94 - 94)
+    
+    updateRaycastFilter()
+    
+    if barBackground then
+        barFill.Size = UDim2.new((1 + 48 - 48)/WkvpCiMI.MaxTicks, (0 + 59 - 59), (1 + 3 - 3), (0 + 1 - 1))
+        barFill.BackgroundColor3 = Color3.fromRGB((0 + 60 - 60), (255 + 21 - 21), (150 + 34 - 34))
+        tickLabel.Text = string.fromBase64("VElDS1M6IDEgLyA=") .. WkvpCiMI.MaxTicks
+        fadeInUI()
+    end
+    
+    if _DuMIHhq then
+        _DuMIHhq.Size = WkvpCiMI.PreviewSize
+        _DuMIHhq.Color = Color3.fromRGB((0 + 70 - 70), (255 + 97 - 97), (255 + 83 - 83))
+        selectionBox.Color3 = Color3.fromRGB((0 + 72 - 72), (255 + 100 - 100), (255 + 44 - 44))
+        updatePreview()
+    end
+    
+    startCharging()
+end
+
+local grbwEOUs onInputEnded(input, gameProcessed)
+    if input.KeyCode == WkvpCiMI.Key and SLRmLJRH.isCharging then
+        stopCharging()
+    end
+end
+
+local grbwEOUs setupConnections()
+    yenS_bv_.characterAdded = hlKYnVFk.CharacterAdded:Connect(grbwEOUs(newChar)
+        updateCharacter(newChar)
+        if _DuMIHhq then
+            _DuMIHhq.Size = FxxmOTtP
+        end
+        if barBackground and SLRmLJRH.uiVisible then
+            fadeOutUI()
+        end
+        SLRmLJRH.current = PvlLLWYk.IDLE
+        SLRmLJRH.isCharging = false
+        SLRmLJRH.ticks = (0 + 19 - 19)
+        
+        if SLRmLJRH.previewUpdateConnection then
+            SLRmLJRH.previewUpdateConnection:Disconnect()
+            SLRmLJRH.previewUpdateConnection = nil
+        end
+    end)
+    
+    yenS_bv_.inputBegan = TdglvlMD.InputBegan:Connect(onInputBegan)
+    yenS_bv_.inputEnded = TdglvlMD.InputEnded:Connect(onInputEnded)
+    
+    yenS_bv_.playerRemoving = hlKYnVFk:GetPropertyChangedSignal(string.fromBase64("UGFyZW50")):Connect(grbwEOUs()
+        if not hlKYnVFk.Parent then
+            cleanupSystem()
+        end
+    end)
+end
+
+setupConnections()
+
+local grbwEOUs cleanupSystem()
+    for _, conn in pairs(yenS_bv_) do
+        pcall(grbwEOUs()
+            conn:Disconnect()
+        end)
+    end
+    table.clear(yenS_bv_)
+    
+    if SLRmLJRH.previewUpdateConnection then
+        SLRmLJRH.previewUpdateConnection:Disconnect()
+        SLRmLJRH.previewUpdateConnection = nil
+    end
+    
+    cancelAllTweens()
+    
+    SLRmLJRH.isCharging = false
+    SLRmLJRH.chargeCoroutine = nil
+    SLRmLJRH.chargingLock = false
+    
+    if JesMxggs then
+        pcall(grbwEOUs()
+            JesMxggs:Destroy()
+        end)
+        JesMxggs = nil
+    end
+    
+    if _DuMIHhq then
+        pcall(grbwEOUs()
+            _DuMIHhq:Destroy()
+        end)
+        _DuMIHhq = nil
+    end
+    
+    AVAUijNe = false
+    SLRmLJRH.uiVisible = false
+end
+
+local grbwEOUs unloadSystem()
+    if not SLRmLJRH.isLoaded then return end
+    
+    SLRmLJRH.isLoaded = false
+    
+    if SLRmLJRH.isCharging then
+        stopCharging()
+    end
+    
+    for name, conn in pairs(yenS_bv_) do
+        if name ~= string.fromBase64("Y2hhcmFjdGVyQWRkZWQ=") and name ~= string.fromBase64("cGxheWVyUmVtb3Zpbmc=") then
+            pcall(grbwEOUs()
+                conn:Disconnect()
+            end)
+            yenS_bv_[name] = nil
+        end
+    end
+    
+    if barBackground and SLRmLJRH.uiVisible then
+        fadeOutUI()
+    end
+    
+    if _DuMIHhq then
+        _DuMIHhq.Size = FxxmOTtP
+    end
+    
+    print(string.fromBase64("8J+UhCBXYXJwIFN5c3RlbSBVbmxvYWRlZA=="))
+end
+
+local grbwEOUs loadSystem()
+    if SLRmLJRH.isLoaded then return end
+    
+    SLRmLJRH.isLoaded = true
+    
+    if not yenS_bv_.inputBegan then
+        yenS_bv_.inputBegan = TdglvlMD.InputBegan:Connect(onInputBegan)
+        yenS_bv_.inputEnded = TdglvlMD.InputEnded:Connect(onInputEnded)
+    end
+    
+    print(string.fromBase64("4pyFIFdhcnAgU3lzdGVtIExvYWRlZA=="))
+end
+
+local kVHGsfRv = {
+    unload = unloadSystem,
+    load = loadSystem,
+    isLoaded = grbwEOUs() return SLRmLJRH.isLoaded end,
+    getState = grbwEOUs() return SLRmLJRH.current end,
+    getTicks = grbwEOUs() return SLRmLJRH.ticks end,
+    getConfig = grbwEOUs() return WkvpCiMI end,
+    
+    setChargeKey = grbwEOUs(newKey)
+        if typeof(newKey) == string.fromBase64("RW51bUl0ZW0=") and newKey.EnumType == Enum.KeyCode then
+            WkvpCiMI.Key = newKey
+            return true
+        end
+        return false
+    end,
+    
+    setWarpStyle = grbwEOUs(style)
+        if style == string.fromBase64("SW5zdGFudA==") or style == string.fromBase64("U21vb3Ro") then
+            WkvpCiMI.WarpStyle = style
+            return true
+        end
+        return false
+    end,
+    
+    setMaxTicks = grbwEOUs(newMax)
+        if type(newMax) == string.fromBase64("bnVtYmVy") and newMax > (0 + 76 - 76) and newMax <= WkvpCiMI.MaxTicksLimit then
+            WkvpCiMI.MaxTicks = newMax
+            if tickLabel then
+                tickLabel.Text = string.fromBase64("VElDS1M6IDAgLyA=") .. WkvpCiMI.MaxTicks
+            end
+            return true
+        end
+        return false
+    end,
+    
+    setDistancePerTick = grbwEOUs(newDistance)
+        if type(newDistance) == string.fromBase64("bnVtYmVy") and newDistance > (0 + 45 - 45) and newDistance <= WkvpCiMI.MaxDistancePerTick then
+            WkvpCiMI.DistancePerTick = newDistance
+            return true
+        end
+        return false
+    end,
+    
+    cleanup = cleanupSystem
+}
+
+if script and script:IsA(string.fromBase64("TW9kdWxlU2NyaXB0")) then
+    return kVHGsfRv
+else
+    _G.WarpSystem = kVHGsfRv
+end
