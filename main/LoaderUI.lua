@@ -6,7 +6,7 @@ local UserInputService = game:GetService("UserInputService")
 
 -- ⚙️ CONFIGURATION - Change these!
 local CONFIG = {
-    ScriptURL = "https://raw.githubusercontent.com/seventyfourfm/loadr/main/main/Loader.lua", -- Your warp script link
+    ScriptURL = "https://github.com/seventyfourfm/loadr/blob/main/main/Loader.lua", -- Your warp script link
     ButtonText = "⚡ LOAD WARP",
     LoadingText = "⏳ LOADING...",
     LoadedText = "✅ LOADED!",
