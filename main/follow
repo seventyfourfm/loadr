@@ -1,67 +1,408 @@
--- FIXED LOADER
+-- Services
+local PathfindingService = game:GetService("PathfindingService")
 local Players = game:GetService("Players")
-local player = Players.LocalPlayer
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
 
--- Create a button
-local gui = Instance.new("ScreenGui")
-gui.Name = "LoaderGui"
-gui.Parent = player:WaitForChild("PlayerGui")
+-- Global States
+local FollowBotActive = false
+local TargetPlayerName = ""
+local CurrentTarget = nil
 
-local button = Instance.new("TextButton")
-button.Size = UDim2.new(0, 200, 0, 50)
-button.Position = UDim2.new(0.5, -100, 0.5, -25)
-button.Text = "Load Warp System"
-button.BackgroundColor3 = Color3.fromRGB(50, 200, 100)
-button.TextColor3 = Color3.fromRGB(255, 255, 255)
-button.TextSize = 20
-button.Font = Enum.Font.GothamBold
-button.Parent = gui
+-- Pathfinding Configuration - FIXED for longer steps
+local AgentParams = {
+    AgentRadius = 2,
+    AgentHeight = 5,
+    AgentCanJump = true,
+    AgentCanClimb = false,
+    WaypointSpacing = 5, -- Increased for longer steps
+    Cost = 1
+}
 
--- Load script when clicked
-button.MouseButton1Click:Connect(function()
-    button.Text = "Loading..."
-    button.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
-    button.Active = false
+----------------------------------------------------------------
+-- 1. SCREEN GUI SETUP
+----------------------------------------------------------------
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "FollowbotFixedGui"
+ScreenGui.ResetOnSpawn = false
+if syn and syn.protect_gui then syn.protect_gui(ScreenGui) end
+ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 250, 0, 200)
+MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true
+MainFrame.Parent = ScreenGui
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = MainFrame
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, 0, 0, 35)
+TitleLabel.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+TitleLabel.Text = "  Followbot V3 (Working)"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.Font = Enum.Font.SourceSansBold
+TitleLabel.TextSize = 15
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = MainFrame
+
+local Line = Instance.new("Frame")
+Line.Size = UDim2.new(1, 0, 0, 2)
+Line.Position = UDim2.new(0, 0, 0, 33)
+Line.BackgroundColor3 = Color3.fromRGB(0, 255, 150)
+Line.BorderSizePixel = 0
+Line.Parent = MainFrame
+
+local Container = Instance.new("Frame")
+Container.Size = UDim2.new(1, 0, 1, -45)
+Container.Position = UDim2.new(0, 0, 0, 45)
+Container.BackgroundTransparency = 1
+Container.Parent = MainFrame
+
+local ContainerLayout = Instance.new("UIListLayout")
+ContainerLayout.Parent = Container
+ContainerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+ContainerLayout.Padding = UDim.new(0, 8)
+ContainerLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+-- UI Elements
+local function createTextBox(placeholder, layoutOrder, onChanged)
+    local Box = Instance.new("TextBox")
+    Box.Size = UDim2.new(0, 220, 0, 35)
+    Box.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    Box.PlaceholderText = placeholder
+    Box.Text = ""
+    Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Box.Font = Enum.Font.SourceSans
+    Box.TextSize = 14
+    Box.LayoutOrder = layoutOrder
+    Box.Parent = Container
+    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 5)
     
-    local scriptLink = "https://raw.githubusercontent.com/seventyfourfm/loadr/refs/heads/main/main/Loader.lua"
-    
-    local success, result = pcall(function()
-        local scriptContent = game:HttpGet(scriptLink)
-        return loadstring(scriptContent)
+    Box:GetPropertyChangedSignal("Text"):Connect(function() 
+        onChanged(Box.Text) 
     end)
+    return Box
+end
+
+local function createToggleButton(text, layoutOrder, onClick)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(0, 220, 0, 35)
+    Button.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+    Button.Text = text .. " [OFF]"
+    Button.TextColor3 = Color3.fromRGB(200, 200, 200)
+    Button.Font = Enum.Font.SourceSans
+    Button.TextSize = 14
+    Button.LayoutOrder = layoutOrder
+    Button.Parent = Container
+    Instance.new("UICorner", Button).CornerRadius = UDim.new(0, 5)
     
-    if success and result then
-        local loadSuccess, loadErr = pcall(result)
-        
-        if loadSuccess then
-            button.Text = "✅ Loaded!"
-            button.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
-            
-            -- Access the loaded module
-            local warpSystem = _G.WarpSystem
-            if warpSystem then
-                print("Warp System loaded successfully!")
-                print("Current state:", warpSystem.getState())
-            end
-            
-            task.wait(1)
-            gui:Destroy()
+    local state = false
+    Button.MouseButton1Click:Connect(function()
+        state = not state
+        Button.BackgroundColor3 = state and Color3.fromRGB(0, 180, 100) or Color3.fromRGB(45, 45, 50)
+        Button.Text = text .. (state and " [ON]" or " [OFF]")
+        Button.TextColor3 = state and Color3.fromRGB(255, 255, 255) or Color3.fromRGB(200, 200, 200)
+        onClick(state)
+    end)
+end
+
+-- Status Label
+local StatusLabel = Instance.new("TextLabel")
+StatusLabel.Size = UDim2.new(0, 220, 0, 25)
+StatusLabel.BackgroundTransparency = 1
+StatusLabel.Text = "Status: Idle"
+StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+StatusLabel.Font = Enum.Font.SourceSans
+StatusLabel.TextSize = 12
+StatusLabel.LayoutOrder = 3
+StatusLabel.Parent = Container
+
+-- Speed Label
+local SpeedLabel = Instance.new("TextLabel")
+SpeedLabel.Size = UDim2.new(0, 220, 0, 25)
+SpeedLabel.BackgroundTransparency = 1
+SpeedLabel.Text = "Speed: 0"
+SpeedLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+SpeedLabel.Font = Enum.Font.SourceSans
+SpeedLabel.TextSize = 12
+SpeedLabel.LayoutOrder = 4
+SpeedLabel.Parent = Container
+
+----------------------------------------------------------------
+-- 2. CORE TRACKING LOGIC (FIXED)
+----------------------------------------------------------------
+
+local function getTargetCharacter()
+    if TargetPlayerName == "" then return nil end
+    
+    -- Try exact match first
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player.Name == TargetPlayerName or player.DisplayName == TargetPlayerName then
+            return player.Character
+        end
+    end
+    
+    -- Then try partial match
+    local lowerTarget = string.lower(TargetPlayerName)
+    for _, player in ipairs(Players:GetPlayers()) do
+        if string.find(string.lower(player.Name), lowerTarget, 1, true) or 
+           string.find(string.lower(player.DisplayName), lowerTarget, 1, true) then
+            return player.Character
+        end
+    end
+    return nil
+end
+
+-- Check if we have line of sight
+local function hasLineOfSight(startPos, endPos)
+    local rayParams = RaycastParams.new()
+    rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+    rayParams.FilterDescendantsInstances = {LocalPlayer.Character}
+    
+    local direction = (endPos - startPos)
+    local distance = direction.Magnitude
+    if distance <= 1 then return true end
+    
+    local result = workspace:Raycast(startPos, direction, rayParams)
+    return result == nil
+end
+
+-- FIXED: Better path following with smooth movement
+local waypointIndex = 1
+local currentPath = nil
+local lastTargetPos = Vector3.new()
+local pathRefreshTimer = 0
+
+local function followPath(path, targetPos)
+    if not path or path.Status ~= Enum.PathStatus.Success then
+        return false
+    end
+    
+    local waypoints = path:GetWaypoints()
+    if #waypoints == 0 then return false end
+    
+    local myChar = LocalPlayer.Character
+    if not myChar then return false end
+    local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+    local myHum = myChar:FindFirstChildOfClass("Humanoid")
+    if not myRoot or not myHum then return false end
+    
+    -- Reset waypoint index if target moved significantly
+    local myPos = myRoot.Position
+    if (lastTargetPos - targetPos).Magnitude > 5 then
+        waypointIndex = 1
+        lastTargetPos = targetPos
+    end
+    
+    -- Find the furthest visible waypoint
+    local bestIndex = 1
+    for i = 1, #waypoints do
+        local wp = waypoints[i]
+        if hasLineOfSight(myPos, wp.Position) then
+            bestIndex = i
         else
-            button.Text = "❌ Script Error!"
-            button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-            print("Load error:", loadErr)
-            task.wait(2)
-            button.Text = "Try Again"
-            button.BackgroundColor3 = Color3.fromRGB(50, 200, 100)
-            button.Active = true
+            break
+        end
+    end
+    
+    -- Move to the best waypoint
+    if bestIndex <= #waypoints then
+        local targetWp = waypoints[bestIndex]
+        local distanceToWp = (myPos - targetWp.Position).Magnitude
+        
+        -- If we're close to the waypoint, move to the next one
+        if distanceToWp < 3 and bestIndex < #waypoints then
+            bestIndex = bestIndex + 1
+            targetWp = waypoints[bestIndex]
+        end
+        
+        -- Move to the waypoint
+        myHum:MoveTo(targetWp.Position)
+        
+        -- Jump if needed
+        if targetWp.Action == Enum.PathWaypointAction.Jump then
+            myHum.Jump = true
+        end
+        
+        -- Check if we need to jump for elevation
+        if targetWp.Position.Y - myPos.Y > 2 then
+            myHum.Jump = true
+        end
+        
+        waypointIndex = bestIndex
+        return true
+    end
+    
+    return false
+end
+
+-- Track and execute movement
+local lastPosition = Vector3.new()
+local stuckTimer = 0
+
+local function trackAndExecute(targetChar)
+    local myChar = LocalPlayer.Character
+    if not myChar or not targetChar then return false end
+    
+    local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+    local myHum = myChar:FindFirstChildOfClass("Humanoid")
+    local targetRoot = targetChar:FindFirstChild("HumanoidRootPart")
+    
+    if not myRoot or not myHum or not targetRoot then return false end
+    
+    -- Check if target is valid
+    if targetChar:GetAttribute("Health") and targetChar:GetAttribute("Health") <= 0 then
+        return false
+    end
+    
+    local myPos = myRoot.Position
+    local targetPos = targetRoot.Position
+    local distance = (myPos - targetPos).Magnitude
+    
+    -- Update speed label
+    local speed = (myPos - lastPosition).Magnitude / 0.1
+    SpeedLabel.Text = "Speed: " .. string.format("%.1f", speed)
+    lastPosition = myPos
+    
+    -- Stop if very close
+    if distance < 3 then 
+        myHum:Move(Vector3.new(0, 0, 0))
+        StatusLabel.Text = "Status: Close enough"
+        return true
+    end
+    
+    -- Stuck detection
+    local currentSpeed = (myPos - lastPosition).Magnitude
+    if currentSpeed < 0.3 and distance > 5 then
+        stuckTimer = stuckTimer + 0.1
+        if stuckTimer > 1.5 then
+            -- Jump and move randomly to get unstuck
+            myHum.Jump = true
+            local randomDir = Vector3.new(math.random(-10, 10), 0, math.random(-10, 10)).Unit
+            myHum:MoveTo(myPos + randomDir * 5)
+            stuckTimer = 0
+            StatusLabel.Text = "Status: Unstucking..."
+            return true
         end
     else
-        button.Text = "❌ Failed to Download!"
-        button.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
-        print("Download error:", result)
-        task.wait(2)
-        button.Text = "Try Again"
-        button.BackgroundColor3 = Color3.fromRGB(50, 200, 100)
-        button.Active = true
+        stuckTimer = math.max(0, stuckTimer - 0.05)
+    end
+    
+    -- Check line of sight
+    if hasLineOfSight(myPos, targetPos) then
+        myHum:MoveTo(targetPos)
+        
+        -- Jump if target is above us
+        if targetPos.Y - myPos.Y > 2 then
+            myHum.Jump = true
+        end
+        
+        StatusLabel.Text = "Status: Direct path"
+        currentPath = nil -- Reset path cache
+        return true
+    end
+    
+    -- Recompute path if needed
+    pathRefreshTimer = pathRefreshTimer + 0.1
+    if not currentPath or pathRefreshTimer > 0.5 or (lastTargetPos - targetPos).Magnitude > 3 then
+        local path = PathfindingService:CreatePath(AgentParams)
+        local success, err = pcall(function()
+            path:ComputeAsync(myPos, targetPos)
+        end)
+        
+        if success and path.Status == Enum.PathStatus.Success then
+            currentPath = path
+            waypointIndex = 1
+            lastTargetPos = targetPos
+            StatusLabel.Text = "Status: Path found"
+        else
+            -- Fallback direct movement
+            myHum:MoveTo(targetPos)
+            StatusLabel.Text = "Status: No path, direct"
+            return true
+        end
+        pathRefreshTimer = 0
+    end
+    
+    -- Follow the cached path
+    if currentPath then
+        return followPath(currentPath, targetPos)
+    end
+    
+    -- Ultimate fallback
+    myHum:MoveTo(targetPos)
+    return true
+end
+
+----------------------------------------------------------------
+-- 3. LINK INITIALIZATION
+----------------------------------------------------------------
+
+createTextBox("Target Username / Display Name", 1, function(text)
+    TargetPlayerName = text
+    StatusLabel.Text = "Status: Target set to " .. text
+    currentPath = nil -- Reset path cache
+    print("Target set to: " .. text)
+end)
+
+createToggleButton("Activate Followbot", 2, function(state)
+    FollowBotActive = state
+    if not state then
+        StatusLabel.Text = "Status: Disabled"
+        currentPath = nil
+        local myChar = LocalPlayer.Character
+        if myChar then
+            local myHum = myChar:FindFirstChildOfClass("Humanoid")
+            if myHum then myHum:Move(Vector3.new(0, 0, 0)) end
+        end
+    else
+        StatusLabel.Text = "Status: Activating..."
+        currentPath = nil
+    end
+    print("Followbot state changed: " .. tostring(state))
+end)
+
+-- Main execution thread
+task.spawn(function()
+    while true do
+        task.wait(0.1)
+        pcall(function()
+            if FollowBotActive then
+                local targetChar = getTargetCharacter()
+                if targetChar then
+                    local success = trackAndExecute(targetChar)
+                    if not success then
+                        StatusLabel.Text = "Status: Target not reachable"
+                    end
+                else
+                    -- Stop moving if target not found
+                    local myChar = LocalPlayer.Character
+                    if myChar then
+                        local myHum = myChar:FindFirstChildOfClass("Humanoid")
+                        if myHum then 
+                            myHum:Move(Vector3.new(0, 0, 0))
+                        end
+                    end
+                    StatusLabel.Text = "Status: Target not found"
+                    currentPath = nil
+                end
+            end
+        end)
     end
 end)
+
+-- Clean up
+LocalPlayer.OnTeleport:Connect(function()
+    FollowBotActive = false
+    TargetPlayerName = ""
+    currentPath = nil
+end)
+
+print("Followbot V3 loaded successfully!")
