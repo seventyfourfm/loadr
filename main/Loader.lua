@@ -1,5 +1,3 @@
-
-
 local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -7,7 +5,6 @@ local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 
--- ⚙️ CONFIGURATION SYSTEM
 local Config = {
     Key = Enum.KeyCode.E,
     MaxTicks = 10,
@@ -37,13 +34,11 @@ local Config = {
 
 Config:validate()
 
--- ⚙️ INTERNAL CONSTANTS
 local HALF_CHARACTER_HEIGHT = 2.5
 local RAY_OFFSET = Vector3.new(0, 5, 0)
 local RAY_DIRECTION = Vector3.new(0, -20, 0)
 local HIDDEN_SIZE = Vector3.new(0, 0, 0)
 
--- 🔄 STATE MANAGEMENT
 local WarpState = {
     IDLE = "IDLE",
     CHARGING = "CHARGING",
@@ -62,20 +57,17 @@ local state = {
     isLoaded = true,
     uiVisible = false,
     chargingLock = false,
-    previewUpdateConnection = nil -- For continuous updates
+    previewUpdateConnection = nil
 }
 
--- 🔌 CONNECTION MANAGEMENT
 local connections = {}
 local activeTweens = {}
 
--- 📺 CACHED UI ELEMENTS
 local screenGui, barBackground, barFill, tickLabel, corner1, corner2
 local previewPart, selectionBox
 local uiSetupDone = false
 local fadeTween = nil
 
--- 🎯 CHARACTER MANAGEMENT
 local function isCharacterValid(character)
     if not character then return false end
     if character:GetAttribute("Disabled") then return false end
@@ -129,7 +121,6 @@ end
 
 initializeCharacter()
 
--- 🧮 CACHED RAYCAST PARAMS
 local raycastParams = RaycastParams.new()
 raycastParams.FilterType = Enum.RaycastFilterType.Exclude
 
@@ -158,7 +149,6 @@ local function updateRaycastFilter()
 end
 updateRaycastFilter()
 
--- 📺 UI FADE FUNCTIONS
 local function fadeInUI()
     if not barBackground then return end
     
@@ -210,7 +200,6 @@ local function fadeOutUI()
     end)
 end
 
--- 📺 UI SETUP
 local function setupUI()
     if uiSetupDone then return end
     
@@ -282,7 +271,6 @@ end
 
 setupUI()
 
--- 🧮 CALCULATION LOGIC
 local function getWarpCFrame(ticksCharged)
     if not state.hrp then return CFrame.new() end
     
@@ -300,7 +288,6 @@ local function getWarpCFrame(ticksCharged)
     return CFrame.new(finalPos, finalPos + forwardDirection)
 end
 
--- 🚀 WARP MECHANICS
 local function cancelAllTweens()
     for _, tween in ipairs(activeTweens) do
         pcall(function()
@@ -340,17 +327,14 @@ local function executeWarp(ticksCharged)
     end
 end
 
--- 🔄 UPDATE PREVIEW (INSTANT - NOW WITH CONTINUOUS UPDATES)
 local function updatePreview()
     if not state.isCharging or state.current ~= WarpState.CHARGING then return end
     if not state.hrp then return end
     
-    -- Use current ticks for preview position
     local newCFrame = getWarpCFrame(state.ticks)
     previewPart.CFrame = newCFrame
 end
 
--- 📊 UPDATE UI
 local function updateUI()
     if not barFill or not tickLabel then return end
     
@@ -367,18 +351,14 @@ local function updateUI()
     end
 end
 
--- 🔄 START CHARGING
 local function startCharging()
     if state.chargingLock then return end
     
     state.chargingLock = true
     
-    -- Update first tick immediately
     updateUI()
     updatePreview()
     
-    -- 🔥 START CONTINUOUS PREVIEW UPDATES
-    -- This runs on RenderStepped for smooth updates while moving
     if state.previewUpdateConnection then
         state.previewUpdateConnection:Disconnect()
         state.previewUpdateConnection = nil
@@ -400,7 +380,6 @@ local function startCharging()
             
             if state.isCharging then
                 updateUI()
-                -- Preview will be updated by RenderStepped
             end
         end
         
@@ -409,14 +388,12 @@ local function startCharging()
     end)
 end
 
--- 🛑 STOP CHARGING
 local function stopCharging()
     if not state.isCharging then return end
     
     state.isCharging = false
     state.current = WarpState.IDLE
     
-    -- Stop continuous preview updates
     if state.previewUpdateConnection then
         state.previewUpdateConnection:Disconnect()
         state.previewUpdateConnection = nil
@@ -445,7 +422,6 @@ local function stopCharging()
     state.ticks = 0
 end
 
--- 🖱️ INPUT HANDLING
 local function onInputBegan(input, gameProcessed)
     if gameProcessed then return end
     if not state.isLoaded then return end
@@ -486,7 +462,6 @@ local function onInputEnded(input, gameProcessed)
     end
 end
 
--- 🔌 SETUP CONNECTIONS
 local function setupConnections()
     connections.characterAdded = player.CharacterAdded:Connect(function(newChar)
         updateCharacter(newChar)
@@ -500,7 +475,6 @@ local function setupConnections()
         state.isCharging = false
         state.ticks = 0
         
-        -- Clean up preview connection
         if state.previewUpdateConnection then
             state.previewUpdateConnection:Disconnect()
             state.previewUpdateConnection = nil
@@ -519,7 +493,6 @@ end
 
 setupConnections()
 
--- 🧹 CLEANUP SYSTEM
 local function cleanupSystem()
     for _, conn in pairs(connections) do
         pcall(function()
@@ -557,7 +530,6 @@ local function cleanupSystem()
     state.uiVisible = false
 end
 
--- 📦 UNLOAD/LOAD SYSTEM
 local function unloadSystem()
     if not state.isLoaded then return end
     
@@ -600,7 +572,6 @@ local function loadSystem()
     print("✅ Warp System Loaded")
 end
 
--- 🌐 EXPOSE FUNCTIONS
 local WarpModule = {
     unload = unloadSystem,
     load = loadSystem,
@@ -652,13 +623,3 @@ if script and script:IsA("ModuleScript") then
 else
     _G.WarpSystem = WarpModule
 end
-
-print("✅ Warp System v2.2 Loaded Successfully! (Continuous Preview Updates)")
-print("📊 Settings:")
-print("  - Max Ticks: " .. Config.MaxTicks)
-print("  - Distance per Tick: " .. Config.DistancePerTick .. " studs")
-print("  - Max Distance: " .. (Config.MaxTicks * Config.DistancePerTick) .. " studs")
-print("  - Warp Style: " .. Config.WarpStyle)
-print("  - Charge Key: " .. tostring(Config.Key))
-print("  - Fade Duration: " .. Config.FadeDuration .. "s (Smooth)")
-print("\n✨ Preview now updates continuously while charging!")
